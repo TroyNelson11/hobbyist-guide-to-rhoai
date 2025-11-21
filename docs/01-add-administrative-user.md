@@ -37,48 +37,23 @@ For this bootcamp, we are using HTpasswd as the Identity Provider (IdP). To lear
 
       oc run \
         --image httpd \
-        -q --rm -i minion -- /bin/sh -c 'sleep 2; htpasswd -n -b -B -C10 <username> <password>' > scratch/users.htpasswd
-
-- Alternative: local command example (if you have htpasswd installed)
-
-      htpasswd -b -B -C10 -c scratch/users.htpasswd <username> <password>
-
-> Expected output
->
-> `Adding password for user <username>`
+        -q --rm -i minion -- /bin/sh -c 'sleep 2; htpasswd -n -b -B -C10 trnelson AIWINGS4' > scratch/users.htpasswd
 
 - [ ] Verify `htpasswd` file
 
       cat scratch/users.htpasswd
 
-> Expected output
->
-> `admin:$2y$10$yOTVCummnCCwCPQf4MkawusPab6h5zoYMHZjqmI7cQiHWKLaCEaCW`
-
 - [ ] Create a secret to represent the htpasswd file
 
       oc create secret generic htpasswd-local --from-file=htpasswd=scratch/users.htpasswd -n openshift-config
-
-> Expected output
->
-> `secret/htpasswd-local created`
 
 - [ ] Verify you created a `secret/htpasswd-local` object in `openshift-config` project
 
       oc get secret/htpasswd-local -n openshift-config
 
-> Expected output
->
-> `NAME              TYPE     DATA   AGE`\
-> `htpasswd-local   Opaque   1      4m46s`
-
 - [ ] Apply the resource to the default OAuth configuration to add the identity provider
 
       oc apply -f configs/01/htpasswd-cr.yaml
-
-> Expected output
->
-> `oauth.config.openshift.io/cluster configured`
 
 - [ ] Verify the identity provider
 
@@ -95,8 +70,7 @@ For this bootcamp, we are using HTpasswd as the Identity Provider (IdP). To lear
 
 - [ ] As kubeadmin, assign the cluster-admin role to perform administrator level tasks
 
-      oc adm policy add-cluster-role-to-user cluster-admin <username>
-
+      oc adm policy add-cluster-role-to-user cluster-admin trnelson
 > [!NOTE]
 > You may see a line saying `Warning: User '<username>' not found`. This is expected and okay. The `User` object that derives from the login with your `htpasswd` credentials isn't created until the first time that user attempts to log in, and the policy will apply to that `User` object the first time it's created.
 
@@ -106,28 +80,20 @@ For this bootcamp, we are using HTpasswd as the Identity Provider (IdP). To lear
 
 - [ ] Log in to the cluster as a user from your identity provider, entering the password when prompted.
 
-      oc login -u <username> -p <password>
+      oc login -u trnelson -p AIWINGS4
 
 > [!NOTE]
 > You may need to add the parameter `--insecure-skip-tls-verify=true` if your clusters api endpoint does not have a trusted cert.
 
-      oc login https://api.cluster-<id>.<id>.sandbox.opentlc.com:6443 --insecure-skip-tls-verify=true -u <username> -p <password>
+      oc login https://api.cluster-<id>.<id>.sandbox.opentlc.com:6443 --insecure-skip-tls-verify=true -u trnelson -p AIWINGS4
 
 > [!NOTE]
 > The remainder of the procedure should be completed with the new cluster-admin `<username>`.  
-> After creating a new cluster-admin user, you can remove the `kubeadmin` user to improve cluster security. Refer [Here](https://docs.redhat.com/en/documentation/openshift_container_platform/4.16/html/authentication_and_authorization/understanding-identity-provider#removing-kubeadmin_understanding-identity-provider) for details.
 
 ## Validation
 
 ![](/assets/01-validation.gif)
 
-## Automation key (catch up)
-
-- [ ] From this repository's root directory, run below command
-
-```sh
-./scripts/setup.sh -s 1
-```
 
 <p align="center">
 <a href="/docs/00-prerequisite.md">Prev</a>
