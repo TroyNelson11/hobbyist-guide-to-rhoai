@@ -83,11 +83,6 @@ For this bootcamp, we are using HTpasswd as the Identity Provider (IdP). To lear
       oc login -u trnelson -p AIWINGS4
 
 > [!NOTE]
-> You may need to add the parameter `--insecure-skip-tls-verify=true` if your clusters api endpoint does not have a trusted cert.
-
-      oc login https://api.cluster-<id>.<id>.sandbox.opentlc.com:6443 --insecure-skip-tls-verify=true -u trnelson -p AIWINGS4
-
-> [!NOTE]
 > The remainder of the procedure should be completed with the new cluster-admin `<username>`.  
 
 ## Validation
