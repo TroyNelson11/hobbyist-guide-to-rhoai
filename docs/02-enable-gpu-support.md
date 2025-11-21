@@ -8,23 +8,6 @@
 
 ## 2.1 Adding a GPU node to an existing RHOCP cluster
 
-### Objectives
-
-- Copying/modifying an existing machineset to create a GPU-enabled MachineSet and machines on AWS
-
-### Rationale
-
-- RHOAI Operator does not perform any function for configuring and managing GPUs
-
-### Takeaways
-
-- Nodes vs. Machines vs. Machinesets
-- GPUs in other cloud providers and bare metal
-- Once completed, RHOAI requires an Accelerator Profile custom resource definition in the redhat-ods-applications.
-- Currently, NVIDIA and Intel Gaudi are the supported [accelerator profiles](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.13/html/working_with_accelerators/overview-of-accelerators_accelerators#overview-of-accelerators_accelerators)
-
-> You can copy and modify a default compute machine set configuration to create a GPU-enabled machine set and machines for the AWS EC2 cloud provider. [More Info](https://docs.redhat.com/en/documentation/openshift_container_platform/4.16/html/machine_management/managing-compute-machines-with-the-machine-api#nvidia-gpu-aws-adding-a-gpu-node_creating-machineset-aws)
-
 ## Steps
 
 - [ ] View the existing nodes
@@ -39,11 +22,6 @@
 - [ ] View the machines and machine sets that exist in the openshift-machine-api namespace
 
       oc get machinesets -n openshift-machine-api
-
-> Expected output
->
-> `NAME                                    DESIRED   CURRENT   READY   AVAILABLE   AGE`\
-> `cluster-xxxxx-xxxxx-worker-us-xxxx-xc   0         0                             5h13m`
 
 - [ ] Make a copy of one of the existing compute MachineSet definitions and output the result to a YAML file
 
@@ -63,9 +41,6 @@
   - [ ] ~Line 29 `.spec.template.metadata.labels["machine.openshift.io/cluster-api-machineset"]` to match the new `.metadata.name`.
   - [ ] ~Line 51 `.spec.template.spec.providerSpec.value.instanceType` to `g4dn.4xlarge`.
 
-> [!TIP]
-> You can use `sed` or `yq` commands. However, sed is more limited and error-prone for complex YAML manipulations. If you have yq installed (a powerful YAML processor), it's much easier to handle such updates.
-
 - [ ] Remove the following fields:
 
   - [ ] ~Line 10 `generation`
@@ -75,18 +50,6 @@
 - [ ] Apply the configuration to create the gpu machine
 
       oc apply -f scratch/machineset.yaml
-
-> Expected output
->
-> `machineset.machine.openshift.io/cluster-xxxx-xxxx-worker-us-xxxx-gpu created`
-
-- [ ] Verify the gpu machineset you created is running
-
-      oc -n openshift-machine-api get machinesets | grep gpu
-
-> Expected output
->
-> `cluster-xxxxx-xxxxx-worker-us-xxxx-xc-gpu   2         2         2       2           6m37s`
 
 - [ ] View the Machine object that the machine set created
 
@@ -102,57 +65,20 @@
 
 ## 2.2 Deploying the Node Feature Discovery Operator (takes time)
 
-### Objectives
-
-- Creating the Namespace, OperatorGroup, and Subscription for the NFD Operator
-
-### Rationale
-
-- After the GPU-enabled node is created, you need to discover the GPU-enabled node so it can be scheduled. NFD makes it easy to detect and understand the hardware features and configurations of a cluster's nodes.
-
-### Takeaways
-
-- Red Hat supports this operator and it is used for all GPUs
-- NFD Operator uses [vendor PCI IDs](https://pcisig.com/membership/member-companies?combine=10de) to identify hardware in a node
-  - sources.pci.deviceClassWhitelist is a list of PCI device class IDs for which to publish a label.
-  - sources.pci.deviceLabelFields is the set of PCI ID fields to use when constructing the name of the feature label.
-
-> Refer [Here](https://docs.redhat.com/en/documentation/openshift_container_platform/4.16/html/machine_management/managing-compute-machines-with-the-machine-api#nvidia-gpu-aws-deploying-the-node-feature-discovery-operator_creating-machineset-aws) for more information.
-
 ## Steps
 
 - [ ] List the available operators for installation searching for Node Feature Discovery (NFD)
 
       oc get packagemanifests -n openshift-marketplace | grep nfd
 
-> Expected output
->
-> `openshift-nfd-operator                             Community Operators   8h`\
-> `nfd                                                Red Hat Operators     8h`
-
 - [ ] Apply the Namespace object
-
-      oc apply -f configs/02/nfd-operator-ns.yaml
-
-> Expected output
->
-> `namespace/openshift-nfd created`
-
 - [ ] Apply the OperatorGroup object
-
-      oc apply -f configs/02/nfd-operator-group.yaml
-
-> Expected output
->
-> `operatorgroup.operators.coreos.com/nfd created`
-
 - [ ] Apply the Subscription object
 
+      oc apply -f configs/02/nfd-operator-ns.yaml
+      oc apply -f configs/02/nfd-operator-group.yaml
       oc apply -f configs/02/nfd-operator-sub.yaml
-
-> Expected output
->
-> `subscription.operators.coreos.com/nfd created`
+      
 
 - [ ] Verify the operator is installed and running
 
@@ -173,10 +99,6 @@
 - [ ] Create the nfd instance object
 
       oc apply -f configs/02/nfd-instance.yaml
-
-> Expected output
->
-> `nodefeaturediscovery.nfd.openshift.io/nfd-instance created`
 
 > [!IMPORTANT]
 > The NFD Operator uses vendor PCI IDs to identify hardware in a node.
