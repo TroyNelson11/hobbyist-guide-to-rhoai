@@ -113,14 +113,6 @@
 
 ![](/assets/06-validation.gif)
 
-## Automation key (Catch up)
-
-- [ ] From this repository's root directory, run below command
-
-```sh
-./scripts/setup.sh -s 6
-```
-
 <p align="center">
 <a href="/docs/05-configure-gpu-sharing-method.md">Prev</a>
 &nbsp;&nbsp;&nbsp;
