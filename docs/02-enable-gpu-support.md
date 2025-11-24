@@ -172,34 +172,16 @@ Below are some of the [PCI vendor ID assignments](https://pcisig.com/membership/
 
       oc get packagemanifests -n openshift-marketplace | grep gpu
 
-> Expected output
->
-> `amd-gpu-operator                                   Community Operators   8h`\
-> `gpu-operator-certified                             Certified Operators   8h`
 
 - [ ] Apply the Namespace object YAML file
 
-      oc apply -f configs/02/nvidia-gpu-operator-ns.yaml
-
-> Expected output
->
-> `namespace/nvidia-gpu-operator created`
-
 - [ ] Apply the OperatorGroup YAML file
-
-      oc apply -f configs/02/nvidia-gpu-operator-group.yaml
-
-> Expected output
->
-> `operatorgroup.operators.coreos.com/nvidia-gpu-operator-group created`
 
 - [ ] Apply the Subscription CR
 
+      oc apply -f configs/02/nvidia-gpu-operator-ns.yaml
+      oc apply -f configs/02/nvidia-gpu-operator-group.yaml
       oc apply -f configs/02/nvidia-gpu-operator-subscription.yaml
-
-> Expected output
->
-> `subscription.operators.coreos.com/gpu-operator-certified created`
 
 - [ ] Verify an install plan has been created. Be patient.
 
@@ -211,8 +193,6 @@ Below are some of the [PCI vendor ID assignments](https://pcisig.com/membership/
 > `...`\
 > `install-295r6   gpu-operator-certified.v24.6.1   Automatic   true`
 
-> [!NOTE]
-> Exit out (CTRL+C) of the above command when you see the expected output
 
 - [ ] Create the cluster policy
 
@@ -302,14 +282,6 @@ Below are some of the [PCI vendor ID assignments](https://pcisig.com/membership/
 ## Validation
 
 ![](/assets/02-validation.gif)
-
-## Automation key (Catch up)
-
-- [ ] From this repository's root directory, run below command
-
-```sh
-./scripts/setup.sh -s 2
-```
 
 <p align="center">
 <a href="/docs/01-add-administrative-user.md">Prev</a>
