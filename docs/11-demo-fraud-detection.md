@@ -16,6 +16,8 @@ You will use an example fraud detection model to complete the following tasks:
 
 ## Steps
 
+https://rh-aiservices-bu.github.io/fraud-detection/fraud-detection-workshop/index.html
+
 - [ ] Create workbench
 - [ ] Clone in repo
 - [ ] Train model
