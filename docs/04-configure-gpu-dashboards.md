@@ -10,7 +10,7 @@
 
 ### Objectives
 
-- Enabling the NVIDIA DCGM Exporter Dashboard
+- Enabling the NVIDIA Data Center GPU Manager Exporter Dashboard
 
 ### Rationale
 
