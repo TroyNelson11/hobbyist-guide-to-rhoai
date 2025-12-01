@@ -57,7 +57,7 @@
 
 > Expected output
 >
-> `cluster-xxxxx-xxxxx-worker-us-xxxx-xc-gpu-29whc   Running   g4dn.4xlarge   us-xxxx-x   us-xxxx-xc   7m59s`\
+> `cluster-xxxxx-xxxxx-worker-us-xxxx-xc-gpu-nr59d   Provisioning   g4dn.4xlarge   us-xxxx-x   us-xxxx-xc   5s`\
 > `cluster-xxxxx-xxxxx-worker-us-xxxx-xc-gpu-nr59d   Running   g4dn.4xlarge   us-xxxx-x   us-xxxx-xc   7m59s`
 
 > [!NOTE]
