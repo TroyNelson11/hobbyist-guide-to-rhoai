@@ -63,14 +63,6 @@
 >
 > `configmap/nvidia-dcgm-exporter-dashboard labeled`
 
-- [ ] Optional: Label the config map to expose the dashboard in the Developer perspective of the web console `odc-dashboard`:
-
-      oc label configmap nvidia-dcgm-exporter-dashboard -n openshift-config-managed "console.openshift.io/odc-dashboard=true"
-
-> Expected output
->
-> `configmap/nvidia-dcgm-exporter-dashboard labeled`
-
 - [ ] View the created resource and verify the labels for the `dashboard` and `odc-dashboard`
 
       oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
